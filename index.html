@@ -1,0 +1,1607 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Interactive Editable Lists</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #eef2f7;
+            margin: 0;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1e3a8a;
+            margin-bottom: 35px;
+        }
+
+        .list-container {
+            background: white;
+            margin-bottom: 35px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+        }
+
+        .list-container h2 {
+            margin-top: 0;
+            color: white;
+            padding: 12px;
+            border-radius: 7px;
+            text-align: center;
+        }
+
+        .student h2 {
+            background: #2563eb;
+        }
+
+        .employee h2 {
+            background: #16a34a;
+        }
+
+        .book h2 {
+            background: #9333ea;
+        }
+
+        .product h2 {
+            background: #ea580c;
+        }
+
+        .patient h2 {
+            background: #dc2626;
+        }
+
+        .controls {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            opacity: 0.82;
+            transform: translateY(-1px);
+        }
+
+        .add-row {
+            background: #2563eb;
+        }
+
+        .save {
+            background: #059669;
+        }
+
+        .add-column {
+            background: #16a34a;
+        }
+
+        .delete-column {
+            background: #dc2626;
+        }
+
+        .clear {
+            background: #555;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow: hidden;
+        }
+
+        th {
+            background: #1e293b;
+            color: white;
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+
+        td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        td[contenteditable="true"] {
+            background: #fffdf0;
+            cursor: text;
+        }
+
+        td[contenteditable="true"]:focus {
+            outline: 2px solid #2563eb;
+            background: white;
+        }
+
+        .delete-row {
+            background: #ef4444;
+            padding: 7px 12px;
+        }
+
+        .info {
+            color: #555;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .message {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 7px;
+            background: #dcfce7;
+            color: #166534;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .list-container {
+                padding: 15px;
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 700px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+    <h1>Interactive Editable Lists</h1>
+
+
+    <!-- =====================================================
+         STUDENT LIST
+    ====================================================== -->
+
+    <div class="list-container student">
+
+        <h2>Student List</h2>
+
+        <div class="controls">
+
+            <button class="add-row"
+                    onclick="addRow('studentTable')">
+                + Add Student
+            </button>
+
+            <button class="save"
+                    onclick="saveTable('studentTable', 'Student')">
+                💾 Save Students
+            </button>
+
+            <button class="add-column"
+                    onclick="addColumn('studentTable')">
+                + Add Column
+            </button>
+
+            <button class="delete-column"
+                    onclick="deleteColumn('studentTable')">
+                Delete Column
+            </button>
+
+            <button class="clear"
+                    onclick="clearTable('studentTable')">
+                Clear All
+            </button>
+
+        </div>
+
+
+        <table id="studentTable">
+
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Roll Number</th>
+                    <th>Department</th>
+                    <th>Year</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td contenteditable="true">Rahul Kumar</td>
+                    <td contenteditable="true">CSE101</td>
+                    <td contenteditable="true">CSE</td>
+                    <td contenteditable="true">4th Year</td>
+                    <td contenteditable="true">rahul@gmail.com</td>
+
+                    <td>
+                        <button class="delete-row"
+                                onclick="deleteRow(this)">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td contenteditable="true">Priya Sharma</td>
+                    <td contenteditable="true">CSE102</td>
+                    <td contenteditable="true">CSE</td>
+                    <td contenteditable="true">4th Year</td>
+                    <td contenteditable="true">priya@gmail.com</td>
+
+                    <td>
+                        <button class="delete-row"
+                                onclick="deleteRow(this)">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+        <p class="info">
+            Student records are saved in your browser.
+        </p>
+
+        <div id="studentMessage" class="message"></div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         EMPLOYEE LIST
+    ====================================================== -->
+
+    <div class="list-container employee">
+
+        <h2>Employee List</h2>
+
+        <div class="controls">
+
+            <button class="add-row"
+                    onclick="addRow('employeeTable')">
+                + Add Employee
+            </button>
+
+            <button class="save"
+                    onclick="saveTable('employeeTable', 'Employee')">
+                💾 Save Employees
+            </button>
+
+            <button class="add-column"
+                    onclick="addColumn('employeeTable')">
+                + Add Column
+            </button>
+
+            <button class="delete-column"
+                    onclick="deleteColumn('employeeTable')">
+                Delete Column
+            </button>
+
+            <button class="clear"
+                    onclick="clearTable('employeeTable')">
+                Clear All
+            </button>
+
+        </div>
+
+
+        <table id="employeeTable">
+
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Employee ID</th>
+                    <th>Department</th>
+                    <th>Designation</th>
+                    <th>Salary</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td contenteditable="true">Ravi Kumar</td>
+                    <td contenteditable="true">EMP101</td>
+                    <td contenteditable="true">IT</td>
+                    <td contenteditable="true">Developer</td>
+                    <td contenteditable="true">45000</td>
+
+                    <td>
+                        <button class="delete-row"
+                                onclick="deleteRow(this)">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td contenteditable="true">Anjali Singh</td>
+                    <td contenteditable="true">EMP102</td>
+                    <td contenteditable="true">HR</td>
+                    <td contenteditable="true">HR Manager</td>
+                    <td contenteditable="true">55000</td>
+
+                    <td>
+                        <button class="delete-row"
+                                onclick="deleteRow(this)">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+        <p class="info">
+            Employee records are saved in your browser.
+        </p>
+
+        <div id="employeeMessage" class="message"></div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         BOOK LIST
+    ====================================================== -->
+
+    <div class="list-container book">
+
+        <h2>Book List</h2>
+
+        <div class="controls">
+
+            <button class="add-row"
+                    onclick="addRow('bookTable')">
+                + Add Book
+            </button>
+
+            <button class="save"
+                    onclick="saveTable('bookTable', 'Book')">
+                💾 Save Books
+            </button>
+
+            <button class="add-column"
+                    onclick="addColumn('bookTable')">
+                + Add Column
+            </button>
+
+            <button class="delete-column"
+                    onclick="deleteColumn('bookTable')">
+                Delete Column
+            </button>
+
+            <button class="clear"
+                    onclick="clearTable('bookTable')">
+                Clear All
+            </button>
+
+        </div>
+
+
+        <table id="bookTable">
+
+            <thead>
+                <tr>
+                    <th>Book Name</th>
+                    <th>Author</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Availability</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td contenteditable="true">Java Programming</td>
+                    <td contenteditable="true">James Gosling</td>
+                    <td contenteditable="true">Programming</td>
+                    <td contenteditable="true">650</td>
+                    <td contenteditable="true">Available</td>
+
+                    <td>
+                        <button class="delete-row"
+                                onclick="deleteRow(this)">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td contenteditable="true">Python Basics</td>
+                    <td contenteditable="true">Mark Lutz</td>
+                    <td contenteditable="true">Programming</td>
+                    <td contenteditable="true">550</td>
+                    <td contenteditable="true">Available</td>
+
+                    <td>
+                        <button class="delete-row"
+                                onclick="deleteRow(this)">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+        <p class="info">
+            Book records are saved in your browser.
+        </p>
+
+        <div id="bookMessage" class="message"></div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         PRODUCT LIST
+    ====================================================== -->
+
+    <div class="list-container product">
+
+        <h2>Product List</h2>
+
+        <div class="controls">
+
+            <button class="add-row"
+                    onclick="addRow('productTable')">
+                + Add Product
+            </button>
+
+            <button class="save"
+                    onclick="saveTable('productTable', 'Product')">
+                💾 Save Products
+            </button>
+
+            <button class="add-column"
+                    onclick="addColumn('productTable')">
+                + Add Column
+            </button>
+
+            <button class="delete-column"
+                    onclick="deleteColumn('productTable')">
+                Delete Column
+            </button>
+
+            <button class="clear"
+                    onclick="clearTable('productTable')">
+                Clear All
+            </button>
+
+        </div>
+
+
+        <table id="productTable">
+
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Product ID</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td contenteditable="true">Laptop</td>
+                    <td contenteditable="true">P101</td>
+                    <td contenteditable="true">Electronics</td>
+                    <td contenteditable="true">55000</td>
+                    <td contenteditable="true">10</td>
+
+                    <td>
+                        <button class="delete-row"
+                                onclick="deleteRow(this)">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td contenteditable="true">Headphones</td>
+                    <td contenteditable="true">P102</td>
+                    <td contenteditable="true">Accessories</td>
+                    <td contenteditable="true">2500</td>
+                    <td contenteditable="true">15</td>
+
+                    <td>
+                        <button class="delete-row"
+                                onclick="deleteRow(this)">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+        <p class="info">
+            Product records are saved in your browser.
+        </p>
+
+        <div id="productMessage" class="message"></div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         PATIENT LIST
+    ====================================================== -->
+
+    <div class="list-container patient">
+
+        <h2>Patient List</h2>
+
+        <div class="controls">
+
+            <button class="add-row"
+                    onclick="addRow('patientTable')">
+                + Add Patient
+            </button>
+
+            <button class="save"
+                    onclick="saveTable('patientTable', 'Patient')">
+                💾 Save Patients
+            </button>
+
+            <button class="add-column"
+                    onclick="addColumn('patientTable')">
+                + Add Column
+            </button>
+
+            <button class="delete-column"
+                    onclick="deleteColumn('patientTable')">
+                Delete Column
+            </button>
+
+            <button class="clear"
+                    onclick="clearTable('patientTable')">
+                Clear All
+            </button>
+
+        </div>
+
+
+        <table id="patientTable">
+
+            <thead>
+                <tr>
+                    <th>Patient Name</th>
+                    <th>Patient ID</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>Doctor</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td contenteditable="true">Ramesh Kumar</td>
+                    <td contenteditable="true">PT101</td>
+                    <td contenteditable="true">45</td>
+                    <td contenteditable="true">Male</td>
+                    <td contenteditable="true">Dr. Sharma</td>
+                    <td contenteditable="true">Admitted</td>
+
+                    <td>
+                        <button class="delete-row"
+                                onclick="deleteRow(this)">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td contenteditable="true">Priya Reddy</td>
+                    <td contenteditable="true">PT102</td>
+                    <td contenteditable="true">32</td>
+                    <td contenteditable="true">Female</td>
+                    <td contenteditable="true">Dr. Rao</td>
+                    <td contenteditable="true">Admitted</td>
+
+                    <td>
+                        <button class="delete-row"
+                                onclick="deleteRow(this)">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+        <p class="info">
+            Patient records are saved in your browser.
+        </p>
+
+        <div id="patientMessage" class="message"></div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script>
+
+        /*
+         * =====================================================
+         * STORAGE KEYS
+         * =====================================================
+         */
+
+        const STORAGE_KEYS = {
+
+            studentTable:
+                "interactive_student_records",
+
+            employeeTable:
+                "interactive_employee_records",
+
+            bookTable:
+                "interactive_book_records",
+
+            productTable:
+                "interactive_product_records",
+
+            patientTable:
+                "interactive_patient_records"
+
+        };
+
+
+        /*
+         * =====================================================
+         * PAGE LOAD
+         * =====================================================
+         */
+
+        window.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                /*
+                 * Load all five tables.
+                 */
+
+                loadTable("studentTable");
+                loadTable("employeeTable");
+                loadTable("bookTable");
+                loadTable("productTable");
+                loadTable("patientTable");
+
+
+                /*
+                 * Automatically save when
+                 * any editable cell is changed.
+                 */
+
+                addAutoSave("studentTable");
+                addAutoSave("employeeTable");
+                addAutoSave("bookTable");
+                addAutoSave("productTable");
+                addAutoSave("patientTable");
+
+            }
+        );
+
+
+        /*
+         * =====================================================
+         * ADD AUTO SAVE
+         * =====================================================
+         */
+
+        function addAutoSave(tableId) {
+
+            const table =
+                document.getElementById(tableId);
+
+
+            table.addEventListener(
+                "input",
+                function () {
+
+                    saveTableData(tableId);
+
+                }
+            );
+
+        }
+
+
+        /*
+         * =====================================================
+         * ADD ROW
+         * =====================================================
+         */
+
+        function addRow(tableId) {
+
+            const table =
+                document.getElementById(tableId);
+
+
+            const tbody =
+                table.querySelector("tbody");
+
+
+            const columnCount =
+                table.querySelector(
+                    "thead tr"
+                ).cells.length;
+
+
+            const row =
+                tbody.insertRow();
+
+
+            /*
+             * Create editable cells.
+             */
+
+            for (
+                let i = 0;
+                i < columnCount - 1;
+                i++
+            ) {
+
+                const cell =
+                    row.insertCell();
+
+
+                cell.contentEditable =
+                    "true";
+
+
+                /*
+                 * Student table starts
+                 * with empty cells.
+                 */
+
+                if (
+                    tableId ===
+                    "studentTable"
+                ) {
+
+                    cell.innerText = "";
+
+                } else {
+
+                    cell.innerText =
+                        "Enter data";
+
+                }
+
+            }
+
+
+            /*
+             * Create Delete button.
+             */
+
+            const actionCell =
+                row.insertCell();
+
+
+            actionCell.innerHTML =
+
+                `<button
+                    class="delete-row"
+                    onclick="deleteRow(this)">
+                    Delete
+                </button>`;
+
+
+            /*
+             * Save the table.
+             */
+
+            saveTableData(tableId);
+
+        }
+
+
+        /*
+         * =====================================================
+         * DELETE ROW
+         * =====================================================
+         */
+
+        function deleteRow(button) {
+
+            const row =
+                button.parentElement
+                    .parentElement;
+
+
+            const table =
+                row.closest("table");
+
+
+            row.remove();
+
+
+            saveTableData(
+                table.id
+            );
+
+
+            showMessage(
+                table.id,
+                "Record deleted successfully!"
+            );
+
+        }
+
+
+        /*
+         * =====================================================
+         * SAVE BUTTON
+         * =====================================================
+         */
+
+        function saveTable(
+            tableId,
+            tableName
+        ) {
+
+            saveTableData(tableId);
+
+
+            showMessage(
+                tableId,
+                tableName +
+                " records saved successfully!"
+            );
+
+        }
+
+
+        /*
+         * =====================================================
+         * SAVE TABLE DATA
+         * =====================================================
+         */
+
+        function saveTableData(tableId) {
+
+            const table =
+                document.getElementById(
+                    tableId
+                );
+
+
+            if (!table) {
+                return;
+            }
+
+
+            const rows =
+                table.querySelectorAll(
+                    "tbody tr"
+                );
+
+
+            const records = [];
+
+
+            /*
+             * Get column headings.
+             */
+
+            const headers =
+                table.querySelectorAll(
+                    "thead th"
+                );
+
+
+            /*
+             * Read every row.
+             */
+
+            rows.forEach(
+                function (row) {
+
+                    const cells =
+                        row.querySelectorAll(
+                            "td"
+                        );
+
+
+                    const record = [];
+
+
+                    /*
+                     * Ignore Action column.
+                     */
+
+                    for (
+                        let i = 0;
+                        i < cells.length - 1;
+                        i++
+                    ) {
+
+                        record.push(
+                            cells[i]
+                                .innerText
+                                .trim()
+                        );
+
+                    }
+
+
+                    /*
+                     * Only save a row if
+                     * it contains some data.
+                     */
+
+                    const hasData =
+                        record.some(
+                            function (value) {
+
+                                return value !== "";
+
+                            }
+                        );
+
+
+                    if (hasData) {
+
+                        records.push(
+                            record
+                        );
+
+                    }
+
+                }
+            );
+
+
+            /*
+             * Save table structure too.
+             */
+
+            const columnNames = [];
+
+
+            headers.forEach(
+                function (header, index) {
+
+                    /*
+                     * Do not save Action column.
+                     */
+
+                    if (
+                        index <
+                        headers.length - 1
+                    ) {
+
+                        columnNames.push(
+                            header.innerText
+                        );
+
+                    }
+
+                }
+            );
+
+
+            const data = {
+
+                columns: columnNames,
+
+                records: records
+
+            };
+
+
+            localStorage.setItem(
+                STORAGE_KEYS[tableId],
+                JSON.stringify(data)
+            );
+
+        }
+
+
+        /*
+         * =====================================================
+         * LOAD TABLE
+         * =====================================================
+         */
+
+        function loadTable(tableId) {
+
+            const savedData =
+                localStorage.getItem(
+                    STORAGE_KEYS[tableId]
+                );
+
+
+            /*
+             * If there is no saved data,
+             * keep the original HTML data
+             * and save it.
+             */
+
+            if (!savedData) {
+
+                saveTableData(tableId);
+
+                return;
+
+            }
+
+
+            try {
+
+                const data =
+                    JSON.parse(
+                        savedData
+                    );
+
+
+                const table =
+                    document.getElementById(
+                        tableId
+                    );
+
+
+                const tbody =
+                    table.querySelector(
+                        "tbody"
+                    );
+
+
+                const headerRow =
+                    table.querySelector(
+                        "thead tr"
+                    );
+
+
+                /*
+                 * Restore column names.
+                 */
+
+                if (
+                    data.columns &&
+                    data.columns.length > 0
+                ) {
+
+                    /*
+                     * Remove existing
+                     * data headers.
+                     */
+
+                    while (
+                        headerRow.cells.length > 1
+                    ) {
+
+                        headerRow.deleteCell(0);
+
+                    }
+
+
+                    /*
+                     * Add saved headers.
+                     */
+
+                    data.columns.forEach(
+                        function (columnName) {
+
+                            const header =
+                                document.createElement(
+                                    "th"
+                                );
+
+
+                            header.innerText =
+                                columnName;
+
+
+                            headerRow.insertBefore(
+                                header,
+                                headerRow.lastElementChild
+                            );
+
+                        }
+                    );
+
+                }
+
+
+                /*
+                 * Remove existing rows.
+                 */
+
+                tbody.innerHTML = "";
+
+
+                /*
+                 * Recreate saved rows.
+                 */
+
+                if (
+                    data.records &&
+                    data.records.length > 0
+                ) {
+
+                    data.records.forEach(
+                        function (record) {
+
+                            createRowFromData(
+                                tableId,
+                                record
+                            );
+
+                        }
+                    );
+
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error loading " +
+                    tableId +
+                    ":",
+                    error
+                );
+
+                /*
+                 * If storage is invalid,
+                 * use the original table.
+                 */
+
+                saveTableData(tableId);
+
+            }
+
+        }
+
+
+        /*
+         * =====================================================
+         * CREATE ROW FROM SAVED DATA
+         * =====================================================
+         */
+
+        function createRowFromData(
+            tableId,
+            record
+        ) {
+
+            const table =
+                document.getElementById(
+                    tableId
+                );
+
+
+            const tbody =
+                table.querySelector(
+                    "tbody"
+                );
+
+
+            const row =
+                tbody.insertRow();
+
+
+            /*
+             * Create data cells.
+             */
+
+            record.forEach(
+                function (value) {
+
+                    const cell =
+                        row.insertCell();
+
+
+                    cell.contentEditable =
+                        "true";
+
+
+                    cell.innerText =
+                        value;
+
+                }
+            );
+
+
+            /*
+             * Action cell.
+             */
+
+            const actionCell =
+                row.insertCell();
+
+
+            actionCell.innerHTML =
+
+                `<button
+                    class="delete-row"
+                    onclick="deleteRow(this)">
+                    Delete
+                </button>`;
+
+        }
+
+
+        /*
+         * =====================================================
+         * ADD COLUMN
+         * =====================================================
+         */
+
+        function addColumn(tableId) {
+
+            const table =
+                document.getElementById(
+                    tableId
+                );
+
+
+            const headerRow =
+                table.querySelector(
+                    "thead tr"
+                );
+
+
+            const columnName =
+                prompt(
+                    "Enter column name:"
+                );
+
+
+            if (
+                columnName === null ||
+                columnName.trim() === ""
+            ) {
+
+                return;
+
+            }
+
+
+            /*
+             * Create new header.
+             */
+
+            const header =
+                document.createElement(
+                    "th"
+                );
+
+
+            header.innerText =
+                columnName;
+
+
+            headerRow.insertBefore(
+                header,
+                headerRow.lastElementChild
+            );
+
+
+            /*
+             * Add a new cell to every row.
+             */
+
+            const rows =
+                table.querySelectorAll(
+                    "tbody tr"
+                );
+
+
+            rows.forEach(
+                function (row) {
+
+                    const cell =
+                        document.createElement(
+                            "td"
+                        );
+
+
+                    cell.contentEditable =
+                        "true";
+
+
+                    cell.innerText =
+                        "Enter data";
+
+
+                    row.insertBefore(
+                        cell,
+                        row.lastElementChild
+                    );
+
+                }
+            );
+
+
+            /*
+             * Save updated structure.
+             */
+
+            saveTableData(tableId);
+
+        }
+
+
+        /*
+         * =====================================================
+         * DELETE COLUMN
+         * =====================================================
+         */
+
+        function deleteColumn(tableId) {
+
+            const table =
+                document.getElementById(
+                    tableId
+                );
+
+
+            const headerRow =
+                table.querySelector(
+                    "thead tr"
+                );
+
+
+            const columnCount =
+                headerRow.cells.length;
+
+
+            if (
+                columnCount <= 2
+            ) {
+
+                alert(
+                    "Cannot delete more columns."
+                );
+
+                return;
+
+            }
+
+
+            const columnNumber =
+                prompt(
+                    "Enter column number to delete (1 - " +
+                    (columnCount - 1) +
+                    "):"
+                );
+
+
+            const columnIndex =
+                parseInt(
+                    columnNumber
+                ) - 1;
+
+
+            if (
+                isNaN(columnIndex) ||
+                columnIndex < 0 ||
+                columnIndex >= columnCount - 1
+            ) {
+
+                alert(
+                    "Invalid column number."
+                );
+
+                return;
+
+            }
+
+
+            /*
+             * Delete header.
+             */
+
+            headerRow.deleteCell(
+                columnIndex
+            );
+
+
+            /*
+             * Delete cells from every row.
+             */
+
+            const rows =
+                table.querySelectorAll(
+                    "tbody tr"
+                );
+
+
+            rows.forEach(
+                function (row) {
+
+                    row.deleteCell(
+                        columnIndex
+                    );
+
+                }
+            );
+
+
+            /*
+             * Save changes.
+             */
+
+            saveTableData(tableId);
+
+        }
+
+
+        /*
+         * =====================================================
+         * CLEAR TABLE
+         * =====================================================
+         */
+
+        function clearTable(tableId) {
+
+            const table =
+                document.getElementById(
+                    tableId
+                );
+
+
+            const tbody =
+                table.querySelector(
+                    "tbody"
+                );
+
+
+            const confirmation =
+                confirm(
+                    "Are you sure you want to delete all rows?"
+                );
+
+
+            if (!confirmation) {
+
+                return;
+
+            }
+
+
+            tbody.innerHTML = "";
+
+
+            /*
+             * Remove saved data.
+             */
+
+            localStorage.removeItem(
+                STORAGE_KEYS[tableId]
+            );
+
+
+            /*
+             * Save the now-empty table.
+             */
+
+            saveTableData(tableId);
+
+
+            showMessage(
+                tableId,
+                "All records have been deleted."
+            );
+
+        }
+
+
+        /*
+         * =====================================================
+         * SHOW MESSAGE
+         * =====================================================
+         */
+
+        function showMessage(
+            tableId,
+            message
+        ) {
+
+            const messageId =
+                tableId.replace(
+                    "Table",
+                    ""
+                ) + "Message";
+
+
+            const messageBox =
+                document.getElementById(
+                    messageId
+                );
+
+
+            if (!messageBox) {
+                return;
+            }
+
+
+            messageBox.innerText =
+                message;
+
+
+            messageBox.style.display =
+                "block";
+
+
+            setTimeout(
+                function () {
+
+                    messageBox.style.display =
+                        "none";
+
+                },
+                2500
+            );
+
+        }
+
+    </script>
+
+</body>
+
+</html>
+
